@@ -124,13 +124,18 @@
       "tags": {},
       "dependsOn": [],
       "properties": {
-        "name": "[variables('functionHostingPlanName')]"
-
+        "name": "[variables('functionHostingPlanName')]",
+        "workerSize": "0",
+        "workerSizeId": "0",
+        "numberOfWorkers": "1"
       },
-      "sku": {
-        "Tier": "Dynamic",
-        "Name": "Y1"
-      }
+       "sku": {
+            "name": "Y1",
+            "tier": "Dynamic",
+            "size": "Y1",
+            "family": "Y",
+            "capacity": 0
+        }
     },
     {
       "apiVersion": "2015-05-01",

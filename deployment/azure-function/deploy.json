@@ -5,7 +5,7 @@
   "parameters": {
     "repoURL": {
       "type": "string",
-      "defaultValue": "https://github.com/v-sosah/AzureMediaDeployment.git",
+      "defaultValue": "https://github.com/upendrasingh1989/DurinMedia.git",
       "metadata": {
         "description": "The URL for the GitHub repository that contains the project to deploy."
       }
@@ -26,7 +26,7 @@
   },
   "variables": {
     "deploymentLocation": "[resourceGroup().location]",
-    "uniqueName": "[concat('durinmedia',uniqueString(resourceGroup().id))]",
+    "uniqueName": "[concat('rsmmedia',uniqueString(resourceGroup().id))]",
     "functionAppName": "[toLower(take(concat('func-', variables('uniqueName')), 60))]",
     "functionHostingPlanName": "[take(concat('plan-', variables('uniqueName')), 40)]",
     "functionStorageAccountName": "[toLower(take(concat('stfun', variables('uniqueName')), 24))]",

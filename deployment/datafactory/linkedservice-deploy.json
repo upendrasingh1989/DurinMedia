@@ -26,7 +26,7 @@
 		{
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
-			"name": "[concat(parameters('dataFactoryName'), '/Durin Media Source')]",
+			"name": "[concat(parameters('dataFactoryName'), '/RSM Media Source')]",
 			"location": "[resourceGroup().location]",
 			"dependsOn": [],
 			"properties": {

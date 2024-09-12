@@ -5,7 +5,7 @@
   "parameters": {
     "repoURL": {
       "type": "string",
-      "defaultValue": "https://github.com/v-sosah/AzureMediaDeployment.git",
+      "defaultValue": "https://github.com/upendrasingh1989/DurinMedia.git",
       "metadata": {
         "description": "The URL for the GitHub repository that contains the project to deploy."
       }
@@ -26,7 +26,7 @@
   },
   "variables": {
     "deploymentLocation": "[resourceGroup().location]",
-    "uniqueName": "[concat('durinmedia',uniqueString(resourceGroup().id))]",
+    "uniqueName": "[concat('rsmmedia',uniqueString(resourceGroup().id))]",
     "functionAppName": "[toLower(take(concat('func-', variables('uniqueName')), 60))]",
     "functionHostingPlanName": "[take(concat('plan-', variables('uniqueName')), 40)]",
     "functionStorageAccountName": "[toLower(take(concat('stfun', variables('uniqueName')), 24))]",
@@ -60,11 +60,15 @@
           "appSettings": [
             {
               "name": "FUNCTIONS_EXTENSION_VERSION",
-              "value": "~3"
+              "value": "~4"
             },
             {
               "name": "FUNCTIONS_WORKER_RUNTIME",
               "value": "dotnet"
+            },
+            {
+              "name":"FUNCTIONS_INPROC_NET8_ENABLED",
+              "value":1
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -94,10 +98,13 @@
               "name": "AZURE_STORAGE_CONNECTION_STRING_VENDOR",
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('vendorStorageName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vendorStorageName')),'2019-06-01').keys[0].value)]"
             }
-          ]
+          ],
+          "netFrameworkVersion": "v8.0"
         },
         "serverFarmId": "[variables('functionServerFarmId')]",
-        "clientAffinityEnabled": true
+        "clientAffinityEnabled": true,
+        "publicNetworkAccess": "Enabled",
+        "httpsOnly": true
       },
       "resources": [
         {
@@ -124,12 +131,18 @@
       "tags": {},
       "dependsOn": [],
       "properties": {
-        "name": "[variables('functionHostingPlanName')]"
-
+        "name": "[variables('functionHostingPlanName')]",
+        "workerSize": "0",
+        "workerSizeId": "0",
+        "numberOfWorkers": "1"
       },
-      "sku": {
-        "Name": "F1"
-      }
+       "sku": {
+            "name": "Y1",
+            "tier": "Dynamic",
+            "size": "Y1",
+            "family": "Y",
+            "capacity": 0
+        }
     },
     {
       "apiVersion": "2015-05-01",

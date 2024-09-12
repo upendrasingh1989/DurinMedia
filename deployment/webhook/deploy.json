@@ -26,7 +26,7 @@
         },
         "branch": {
             "type": "string",
-            "defaultValue": "master",
+            "defaultValue": "main",
             "metadata": {
                 "description": "The branch of the GitHub repository to use."
             }
@@ -44,7 +44,7 @@
                 "description": "blob storage name media storage"
             }
         },
-        "durinTopicWebhookAppName": {
+        "rsmTopicWebhookAppName": {
             "type": "string",
             "metadata": {
                 "description": "description"
@@ -54,7 +54,7 @@
     "functions": [],
     "variables": {
         "storageTopic": "[concat(parameters('blobStorageName'),'-topic')]",
-        "uniqueName": "[concat('durinmedia',uniqueString(resourceGroup().id))]",
+        "uniqueName": "[concat('rsmmedia',uniqueString(resourceGroup().id))]",
         "appHostingPlanName": "[take(concat('webhook-plan-', variables('uniqueName')), 40)]"
     },
     "resources": [
@@ -73,7 +73,7 @@
         },
         {
             "apiVersion": "2019-08-01",
-            "name": "[parameters('durinTopicWebhookAppName')]",
+            "name": "[parameters('rsmTopicWebhookAppName')]",
             "type": "Microsoft.Web/sites",
             "location": "[parameters('location')]",
             "dependsOn": [
@@ -91,7 +91,7 @@
                     "name": "web",
                     "type": "sourcecontrols",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/Sites', parameters('durinTopicWebhookAppName'))]"
+                        "[resourceId('Microsoft.Web/Sites', parameters('rsmTopicWebhookAppName'))]"
                     ],
                     "properties": {
                         "RepoUrl": "[parameters('repoURL')]",
@@ -117,14 +117,14 @@
             "name": "[concat(variables('storageTopic'),'/' ,'logicappsubscribe')]",
             "dependsOn": [
                 "[resourceId('Microsoft.EventGrid/systemTopics', variables('storageTopic'))]",
-                "[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('durinTopicWebhookAppName'), 'web')]"
+                "[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('rsmTopicWebhookAppName'), 'web')]"
             ],
             "properties": {
                 "destination": {
                     "properties": {
                         "maxEventsPerBatch": 1,
                         "preferredBatchSizeInKilobytes": 64,
-                        "endpointUrl": "[concat('https://', reference(resourceId('Microsoft.Web/sites',parameters('durinTopicWebhookAppName'))).defaultHostName, '/api/updates')]"
+                        "endpointUrl": "[concat('https://', reference(resourceId('Microsoft.Web/sites',parameters('rsmTopicWebhookAppName'))).defaultHostName, '/api/updates')]"
                     },
                     "endpointType": "WebHook"
                 },

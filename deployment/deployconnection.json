@@ -5,8 +5,8 @@
     "functions": [],
     "variables": {
         "baseTemplatePath": "[deployment().properties.templateLink.uri]",
-        "blobStorageAccount": "[take(concat('durinstorage',uniqueString(resourceGroup().id)),24)]",
-        "durinTopicWebhookAppName": "[take(concat('durintopicwebhook',uniqueString(resourceGroup().id)),60)]"
+        "blobStorageAccount": "[take(concat('rsmstorage',uniqueString(resourceGroup().id)),24)]",
+        "rsmTopicWebhookAppName": "[take(concat('rsmtopicwebhook',uniqueString(resourceGroup().id)),60)]"
     },
     "resources": [
         {
@@ -101,8 +101,8 @@
                     "blobStorageName": {
                         "value": "[variables('blobStorageAccount')]"
                     },
-                    "durinTopicWebhookAppName": {
-                        "value": "[variables('durinTopicWebhookAppName')]"
+                    "rsmTopicWebhookAppName": {
+                        "value": "[variables('rsmTopicWebhookAppName')]"
                     }
                 }
             },

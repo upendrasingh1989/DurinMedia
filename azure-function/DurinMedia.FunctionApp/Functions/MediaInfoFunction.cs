@@ -3,12 +3,11 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Sample.MediaInfo.Core;
+using Microsoft.Azure.Functions.Worker;
 
 namespace Sample.Mediainfo.FxnApp.Functions
 {
@@ -38,7 +37,7 @@ namespace Sample.Mediainfo.FxnApp.Functions
         /// </summary>
         /// <param name="req">The POST request, with blobUri query or body.</param>
         /// <returns>The report in JSON format, or a error message.</returns>
-        [FunctionName("MediaInfo")]
+        [Function("MediaInfo")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req)
         {

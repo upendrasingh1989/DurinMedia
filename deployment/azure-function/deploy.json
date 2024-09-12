@@ -100,7 +100,7 @@
             }
           ],
           "netFrameworkVersion": "v8.0",
-          use32BitWorkerProcess": true,
+          "use32BitWorkerProcess": true,
           "ftpsState": false,
           "alwaysOn": false,
         },

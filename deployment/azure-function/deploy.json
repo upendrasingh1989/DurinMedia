@@ -101,13 +101,11 @@
           ],
           "netFrameworkVersion": "v8.0",
           "use32BitWorkerProcess": true,
-          "ftpsState": false,
           "alwaysOn": false,
         },
         "serverFarmId": "[variables('functionServerFarmId')]",
         "publicNetworkAccess": "Enabled",
         "clientAffinityEnabled": false,
-        "virtualNetworkSubnetId": null,
         "functionsRuntimeAdminIsolationEnabled": true,
         "httpsOnly": true
       },

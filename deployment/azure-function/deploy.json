@@ -137,11 +137,11 @@
         "numberOfWorkers": "1"
       },
        "sku": {
-            "name": "Y1",
+            "name": "S1",
             "tier": "Dynamic",
-            "size": "Y1",
-            "family": "Y",
-            "capacity": 0
+            "size": "S1",
+            "family": "S",
+            "capacity": 1
         }
     },
     {

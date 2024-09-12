@@ -99,11 +99,16 @@
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('vendorStorageName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vendorStorageName')),'2019-06-01').keys[0].value)]"
             }
           ],
-          "netFrameworkVersion": "v8.0"
+          "netFrameworkVersion": "v8.0",
+          use32BitWorkerProcess": true,
+          "ftpsState": false,
+          "alwaysOn": false,
         },
         "serverFarmId": "[variables('functionServerFarmId')]",
-        "clientAffinityEnabled": true,
         "publicNetworkAccess": "Enabled",
+        "clientAffinityEnabled": false,
+        "virtualNetworkSubnetId": null,
+        "functionsRuntimeAdminIsolationEnabled": true,
         "httpsOnly": true
       },
       "resources": [
@@ -137,11 +142,8 @@
         "numberOfWorkers": "1"
       },
        "sku": {
-            "name": "Y1",
-            "tier": "Dynamic",
-            "size": "Y1",
-            "family": "Y",
-            "capacity": 0
+            "Tier": "Standard",
+            "Name": "S1"
         }
     },
     {

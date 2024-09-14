@@ -1,6 +1,5 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-
   "contentVersion": "1.0.0.0",
   "parameters": {
     "repoURL": {
@@ -22,6 +21,38 @@
       "metadata": {
         "description": "blob storage name media storage"
       }
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "S1",
+      "metadata": {
+        "description": "The pricing tier for the hosting plan."
+      }
+    },
+    "workerSize": {
+      "type": "string",
+      "allowedValues": [
+        "0",
+        "1",
+        "2"
+      ],
+      "defaultValue": "0",
+      "metadata": {
+        "description": "The instance size of the hosting plan (small, medium, or large)."
+      }
+    },
+    "storageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_GRS",
+        "Standard_ZRS",
+        "Premium_LRS"
+      ],
+      "metadata": {
+        "description": "Storage Account type"
+      }
     }
   },
   "variables": {
@@ -31,14 +62,12 @@
     "functionHostingPlanName": "[take(concat('plan-', variables('uniqueName')), 40)]",
     "functionStorageAccountName": "[toLower(take(concat('stfun', variables('uniqueName')), 24))]",
     "functionServerFarmId": "[concat('/subscriptions/', subscription().subscriptionId,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', variables('functionHostingPlanName'))]",
-
     "appInsightsName": "[take(concat('appi-', variables('uniqueName')), 255)]",
-
     "readerAndDataAccessRoleId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'c12c1c16-33a1-487b-954d-41c89c60f349')]",
     "storageBlobDataContributorRoleId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
     "vendorStorageName": "[take(concat('vendor', parameters('blobStorageName')),24)]"
   },
-  "resources": [    
+  "resources": [
     {
       "apiVersion": "2018-11-01",
       "name": "[variables('functionAppName')]",
@@ -56,6 +85,7 @@
       ],
       "properties": {
         "name": "[variables('functionAppName')]",
+        "serverFarmId": "[variables('functionServerFarmId')]",
         "siteConfig": {
           "appSettings": [
             {
@@ -67,8 +97,8 @@
               "value": "dotnet"
             },
             {
-              "name":"FUNCTIONS_INPROC_NET8_ENABLED",
-              "value":1
+              "name": "FUNCTIONS_INPROC_NET8_ENABLED",
+              "value": 1
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -99,11 +129,13 @@
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('vendorStorageName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vendorStorageName')),'2019-06-01').keys[0].value)]"
             }
           ],
-          "netFrameworkVersion": "v8.0",
-          "use32BitWorkerProcess": true,
-          "alwaysOn": false,
+          "alwaysOn": true,
+          "cors": {
+            "allowedOrigins": [
+              "*"
+            ]
+          }
         },
-        "serverFarmId": "[variables('functionServerFarmId')]",
         "publicNetworkAccess": "Enabled",
         "clientAffinityEnabled": false,
         "functionsRuntimeAdminIsolationEnabled": true,
@@ -133,16 +165,13 @@
       "kind": "",
       "tags": {},
       "dependsOn": [],
-      "properties": {
-        "name": "[variables('functionHostingPlanName')]",
-        "workerSize": "0",
-        "workerSizeId": "0",
-        "numberOfWorkers": "1"
+      "sku": {
+        "name": "[parameters('sku')]"
       },
-       "sku": {
-            "Tier": "Standard",
-            "Name": "S1"
-        }
+      "properties": {
+        "workerSize": "[parameters('workerSize')]",
+        "numberOfWorkers": 1
+      }
     },
     {
       "apiVersion": "2015-05-01",
@@ -162,8 +191,9 @@
       "name": "[variables('functionStorageAccountName')]",
       "location": "[variables('deploymentLocation')]",
       "tags": {},
+      "kind": "Storage",
       "sku": {
-        "name": "Standard_LRS"
+        "name": "[parameters('storageAccountType')]"
       },
       "properties": {
         "supportsHttpsTrafficOnly": true
@@ -192,8 +222,7 @@
         "roleDefinitionId": "[variables('storageBlobDataContributorRoleId')]",
         "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('functionAppName')), '2019-08-01', 'Full').identity.principalId]"
       }
-    }    
+    }
   ],
-  "outputs": {
-  }
+  "outputs": {}
 }

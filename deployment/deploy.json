@@ -24,25 +24,6 @@
   },
   "resources": [
     {
-      "name": "azurefunctiondeployment",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-10-01",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[uri(variables('baseTemplatePath'), 'azure-function/deploy.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "blobStorageName": {
-            "value": "[variables('blobStorageAccount')]"
-          }
-        }
-      },
-      "dependsOn": [
-      ]
-    },
-    {
       "name": "datafactory-deployment",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
@@ -63,10 +44,7 @@
             "value": "[variables('vendorblobStorageAccount')]"
           }
         }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'azurefunctiondeployment')]"
-      ]
+      }
     },
     {
       "name": "logiapps-deployment",
@@ -87,7 +65,6 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'azurefunctiondeployment')]",
         "[resourceId('Microsoft.Resources/deployments', 'datafactory-deployment')]"
       ]
     },
@@ -134,7 +111,6 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'azurefunctiondeployment')]",
         "[resourceId('Microsoft.Resources/deployments', 'datafactory-deployment')]"
       ]
     },

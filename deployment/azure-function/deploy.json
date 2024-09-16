@@ -85,6 +85,26 @@
       ],
       "properties": {
         "name": "[variables('functionAppName')]",
+        "enabled": true,
+        "hostNameSslStates": [
+          {
+            "name": "[concat(parameters('functionAppName'), '.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Standard"
+          },
+          {
+            "name": "[concat(parameters('functionAppName'), '.scm.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Repository"
+          }
+        ],
+        "reserved": false,
+        "isXenon": false,
+        "hyperV": false,
+        "dnsConfiguration": {},
+        "vnetRouteAllEnabled": false,
+        "vnetImagePullEnabled": false,
+        "vnetContentShareEnabled": false,
         "serverFarmId": "[variables('functionServerFarmId')]",
         "siteConfig": {
           "appSettings": [
@@ -129,18 +149,27 @@
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('vendorStorageName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vendorStorageName')),'2019-06-01').keys[0].value)]"
             }
           ],
-          "alwaysOn": true,
-          "netFrameworkVersion": "v8.0",
-          "cors": {
-            "allowedOrigins": [
-              "*"
-            ]
-          }
+          "numberOfWorkers": 1,
+          "acrUseManagedIdentityCreds": false,
+          "alwaysOn": false,
+          "http20Enabled": false,
+          "functionAppScaleLimit": 200,
+          "minimumElasticInstanceCount": 0
         },
         "publicNetworkAccess": "Enabled",
-        "clientAffinityEnabled": false,
         "functionsRuntimeAdminIsolationEnabled": true,
-        "httpsOnly": true
+        "scmSiteAlsoStopped": false,
+        "clientAffinityEnabled": false,
+        "clientCertEnabled": false,
+        "clientCertMode": "Required",
+        "hostNamesDisabled": false,
+        "vnetBackupRestoreEnabled": false,
+        "customDomainVerificationId": "2FAABA51D93D79638749973EF3BAEBC6240E0B97B928389BB008E8FBC7F4E74C",
+        "containerSize": 1536,
+        "dailyMemoryTimeQuota": 0,
+        "httpsOnly": true,
+        "redundancyMode": "None",
+        "keyVaultReferenceIdentity": "SystemAssigned"
       },
       "resources": [
         {
